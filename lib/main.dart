@@ -18,7 +18,12 @@ class CryptoListApp extends StatelessWidget {
         dividerColor: Colors.white24,
         appBarTheme: AppBarTheme(
           backgroundColor: Color.fromARGB(255, 31, 31, 31),
-          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+          ),
+          iconTheme: IconThemeData(color: Colors.white),
         ),
         listTileTheme: ListTileThemeData(iconColor: Colors.white),
         textTheme: const TextTheme(
@@ -26,7 +31,11 @@ class CryptoListApp extends StatelessWidget {
           bodySmall: TextStyle(color: Colors.white30, fontSize: 14),
         ),
       ),
-      home: const CryptoListScreen(),
+      routes: {
+        "/coins-list": (context) => CryptoListScreen(),
+        "/coin": (context) => CryptoCoinScreen("coin"),
+      },
+      initialRoute: "/coins-list",
     );
   }
 }
@@ -48,13 +57,47 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
       body: ListView.separated(
         separatorBuilder: (context, i) => Divider(),
         itemCount: 3,
-        itemBuilder: (context, i) => ListTile(
-          leading: Image.asset("assets/png/coin.png", fit: BoxFit.contain),
-          trailing: Icon(Icons.arrow_forward_ios),
-          title: Text("Coin", style: textTheme.bodyMedium),
-          subtitle: Text("\$1000", style: textTheme.bodySmall),
-        ),
+        itemBuilder: (context, i) {
+          const coin = "Coin";
+          return ListTile(
+            leading: Image.asset("assets/png/coin.png", fit: BoxFit.contain),
+            trailing: Icon(Icons.arrow_forward_ios),
+            title: Text(coin, style: textTheme.bodyMedium),
+            subtitle: Text("\$1000", style: textTheme.bodySmall),
+            onTap: () {
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(builder: (context) => CryptoCoinScreen(coin)),
+              // );
+              Navigator.of(context).pushNamed("/coin", arguments: coin);
+            },
+          );
+        },
       ),
     );
+  }
+}
+
+class CryptoCoinScreen extends StatefulWidget {
+  String _coin;
+
+  CryptoCoinScreen(String coin, {super.key}) : _coin = coin;
+
+  @override
+  State<CryptoCoinScreen> createState() => _CryptoCoinScreenState();
+}
+
+class _CryptoCoinScreenState extends State<CryptoCoinScreen> {
+  @override
+  void didChangeDependencies() {
+    final arg = ModalRoute.of(context)?.settings.arguments;
+    assert(arg != null && arg is String, "Error");
+    widget._coin = arg as String;
+    setState(() {});
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(appBar: AppBar(title: Text(widget._coin ?? "error")));
   }
 }
