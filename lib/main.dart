@@ -26,14 +26,19 @@ class CryptoListApp extends StatelessWidget {
           bodySmall: TextStyle(color: Colors.white30, fontSize: 14),
         ),
       ),
-      home: const MyHomePages(),
+      home: const CryptoListScreen(),
     );
   }
 }
 
-class MyHomePages extends StatelessWidget {
-  const MyHomePages();
+class CryptoListScreen extends StatefulWidget {
+  const CryptoListScreen();
 
+  @override
+  State<CryptoListScreen> createState() => _CryptoListScreenState();
+}
+
+class _CryptoListScreenState extends State<CryptoListScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
